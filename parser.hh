@@ -312,6 +312,11 @@ class StringInput : public Input
 	 */
 	StringInput(std::string &s) : str(std::move(s)) {}
 	/**
+	 * Constructs the wrapper from a string (`s`).
+	 * The new object is copy-constructed from the string argument.
+	 */
+	StringInput(const std::string& s) : str(s) {}
+	/**
 	 * Provides direct access to the underlying string's storage.
 	 */
 	virtual bool  fillBuffer(Index start, Index &length, char32_t *&b);
