@@ -15,7 +15,7 @@ set_target_properties(pegmatite-static PROPERTIES
 	POSITION_INDEPENDENT_CODE true
 	OUTPUT_NAME "pegmatite")
 
-list(APPEND CMAKE_CXX_FLAGS "-std=c++11 -Wall")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall")
 option(USE_RTTI "Use native C++ RTTI" ON)
 option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 if (USE_RTTI)
