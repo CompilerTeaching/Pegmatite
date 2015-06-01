@@ -101,10 +101,11 @@ class Input
 			idx++;
 			return *this;
 		}
-	        inline iterator &operator++(int inc)
+	        inline iterator operator++(int /* dummy */)
 		{
-			idx += inc;
-			return *this;
+			iterator copy = *this;
+			idx++;
+			return copy;
 		}
 		/**
 		 * Move the iterator forward by the specified amount.

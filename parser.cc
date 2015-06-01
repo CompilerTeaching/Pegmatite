@@ -482,10 +482,11 @@ class IteratorAdaptor : public std::iterator<std::bidirectional_iterator_tag, Ou
 			++s;
 			return *this;
 		}
-		inline IteratorAdaptor<Src, Out,In> &operator++(int inc)
+		inline IteratorAdaptor<Src, Out,In> operator++(int inc)
 		{
-			s += inc;
-			return *this;
+			auto copy = *this;
+			s++;
+			return copy;
 		}
 		inline IteratorAdaptor<Src, Out,In> &operator--()
 		{
