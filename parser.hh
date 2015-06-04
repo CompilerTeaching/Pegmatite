@@ -362,7 +362,7 @@ class IteratorInput : public Input
 	 */
 	bool fillBuffer(Index start, Index &length, char32_t *&b) override
 	{
-		if (start > (Index)(end-begin))
+		if (start > static_cast<Index>(end-begin))
 		{
 			length = 0;
 			return false;
@@ -370,7 +370,7 @@ class IteratorInput : public Input
 		Index copied = 0;
 		for (T i=(begin+start) ; (i != end) && (copied < length) ; ++i)
 		{
-			b[copied++] = (char32_t)(*i);
+			b[copied++] = static_cast<char32_t>(*i);
 		}
 		length = copied;
 		return true;
@@ -378,7 +378,7 @@ class IteratorInput : public Input
 	/**
 	 * Returns the size of the string.
 	 */
-	Index size() const override { return (Index)(end - begin); }
+	Index size() const override { return static_cast<Index>(end - begin); }
 };
 
 
@@ -793,7 +793,7 @@ template <class T> T &operator << (T &stream, const InputRange &ir)
 {
 	for(auto c : ir)
 	{
-		stream << (typename T::char_type)c;
+		stream << static_cast<typename T::char_type>(c);
 	}
 	return stream;
 }

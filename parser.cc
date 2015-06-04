@@ -401,10 +401,10 @@ public:
 	{
 		assert(min >= 0);
 		assert(min <= max);
-		mSetExpr.resize((size_t)max + 1U);
+		mSetExpr.resize(static_cast<size_t>(max) + 1U);
 		for(; min <= max; ++min)
 		{
-			mSetExpr[(size_t)min] = true;
+			mSetExpr[static_cast<size_t>(min)] = true;
 		}
 	}
 
@@ -476,7 +476,7 @@ class IteratorAdaptor : public std::iterator<std::bidirectional_iterator_tag, Ou
 		public:
 		inline IteratorAdaptor(Src src) : s(src) {}
 		inline IteratorAdaptor() {}
-		inline Out operator*() const { return (Out)*s; }
+		inline Out operator*() const { return static_cast<Out>(*s); }
 		inline IteratorAdaptor &operator++()
 		{
 			++s;
@@ -1138,7 +1138,7 @@ void StringExpr::dump() const
 	fprintf(stderr, "\"");
 	for (int c : characters)
 	{
-		fprintf(stderr, "%c", (char)c);
+		fprintf(stderr, "%c", static_cast<char>(c));
 	}
 	fprintf(stderr, "\"");
 }
@@ -1737,7 +1737,7 @@ bool CharacterExpr::parse_term(Context &con) const
 }
 void CharacterExpr::dump() const
 {
-	fprintf(stderr, "'%c'", (char)character);
+	fprintf(stderr, "'%c'", static_cast<char>(character));
 }
 
 ExprPtr CharacterExpr::operator-(const CharacterExpr &other)

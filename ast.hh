@@ -309,7 +309,7 @@ public:
 
 	explicit operator bool() const noexcept
 	{
-		return (bool)ptr;
+		return static_cast<bool>(ptr);
 	}
 
 	/**
