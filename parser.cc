@@ -29,6 +29,7 @@
 #include <cstring>
 #include <cassert>
 #include <stdexcept>
+#include <sstream>
 #include <regex>
 #include <unordered_map>
 #include <unordered_set>
@@ -1513,6 +1514,18 @@ ExprPtr operator !(const ExprPtr &e)
 	@param e end position.
  */
 InputRange::InputRange(const ParserPosition &b, const ParserPosition &e) : start(b), finish(e) { }
+
+std::string InputRange::str() const
+{
+	std::stringstream s;
+
+	for (char c : *this)
+	{
+		s << c;
+	}
+
+	return s.str();
+}
 
 
 /** constructor.

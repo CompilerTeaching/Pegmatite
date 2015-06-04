@@ -443,6 +443,10 @@ public:
 	 * Iterator to the end of the input range.
 	 */
 	Input::iterator end() const { return finish.it; };
+	/**
+	 * Convert this range to a std::string.
+	 */
+	std::string str() const;
 };
 
 
