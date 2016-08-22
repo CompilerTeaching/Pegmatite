@@ -310,6 +310,9 @@ public:
 		if ((childRange.begin() < r.begin()) ||
 			(childRange.end() > r.end()))
 		{
+			if (Optional)
+				return true;
+
 			err(childRange,
 				"Non-optional " + demangle(typeid(T).name()) + " expected.");
 			return false;
