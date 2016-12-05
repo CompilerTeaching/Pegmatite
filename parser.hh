@@ -385,6 +385,11 @@ class StringInput : public Input
 	StringInput(const std::string& s, const std::string& name = "")
 		: Input(name), str(s) {}
 	/**
+	 * Constructs the wrapper from a string (`s`).
+	 * The new object is copy-constructed from the string argument.
+	 */
+	StringInput(const std::string& s) : str(s) {}
+	/**
 	 * Provides direct access to the underlying string's storage.
 	 */
 	bool  fillBuffer(Index start, Index &length, char32_t *&b) override;
