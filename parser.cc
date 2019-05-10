@@ -912,7 +912,7 @@ protected:
 class SequenceExpr : public BinaryExpr
 {
 public:
-	SequenceExpr(const ExprPtr left, const ExprPtr right) : BinaryExpr(left, right) {}
+	SequenceExpr(const ExprPtr l, const ExprPtr r) : BinaryExpr(l, r) {}
 
 	//parse with whitespace
 	virtual bool parse_non_term(Context &con) const
@@ -942,8 +942,8 @@ public:
 class ChoiceExpr : public BinaryExpr
 {
 public:
-	ChoiceExpr(const ExprPtr &left, const ExprPtr &right) :
-		BinaryExpr(left, right) {}
+	ChoiceExpr(const ExprPtr &l, const ExprPtr &r) :
+		BinaryExpr(l, r) {}
 
 	virtual bool parse_non_term(Context &con) const
 	{
