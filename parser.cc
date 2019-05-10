@@ -37,8 +37,10 @@
 #include <unordered_set>
 #include <sys/stat.h>
 #include <sys/types.h>
+#ifdef __unix__
 #include <sys/uio.h>
 #include <unistd.h>
+#endif
 
 #include "parser.hh"
 
@@ -1451,6 +1453,7 @@ Input::Index StringInput::size() const
 	return str.size();
 }
 
+#ifdef __unix__
 AsciiFileInput::AsciiFileInput(int file, const std::string& name)
 	: Input(name), fd(file)
 {
@@ -1497,6 +1500,7 @@ Input::Index AsciiFileInput::size() const
 {
 	return file_size;
 }
+#endif
 
 StreamInput StreamInput::Create(const std::string& name, std::istream& s)
 {

@@ -309,6 +309,7 @@ class UnicodeVectorInput : public Input
 	Index size() const override;
 };
 
+#ifdef __unix__
 /**
  * A concrete `Input` class that wraps a file.  The file is assumed to be in
  * ASCII.  Note that this does *NOT* include UTF-8 unless it is restricted to
@@ -333,6 +334,7 @@ struct AsciiFileInput : public Input
 	 */
 	size_t file_size;
 };
+#endif
 
 /** An Input that wraps a std::istream. */
 struct StreamInput : public Input
