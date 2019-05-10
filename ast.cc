@@ -37,15 +37,13 @@ namespace {
  * then the constructors for the fields run, accessing it to detect their
  * parents.
  */
-// FIXME: Should be thread_local, but that doesn't seem to work on OS X for
-// some reason (__thread does)
-__thread pegmatite::ASTContainer *current = nullptr;
+thread_local pegmatite::ASTContainer *current = nullptr;
 /**
  * The current parser delegate.  When constructing an object, this is set and
  * then the constructors for the fields run, accessing it to detect their
  * parents.
  */
-__thread pegmatite::ASTParserDelegate *currentParserDelegate;
+thread_local pegmatite::ASTParserDelegate *currentParserDelegate;
 }
 
 namespace pegmatite {
