@@ -55,7 +55,12 @@ std::string demangle(std::string mangled)
 	size_t s = 0;
 	char *buffer = static_cast<char*>(malloc(mangled.length() + 1));
 
-	char *demangled = abi::__cxa_demangle(mangled.c_str(), buffer, &s, &err);
+	char *demangled = 
+#ifdef __unix__
+		abi::__cxa_demangle(mangled.c_str(), buffer, &s, &err);
+#else
+		nullptr;
+#endif
 	std::string result = demangled ? demangled : mangled;
 
 	free(demangled ? demangled : buffer);
