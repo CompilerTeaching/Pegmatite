@@ -1064,7 +1064,7 @@ class TraceExpr : public Expr
 	/**
 	 * The real expression that will handle the parsing.
 	 */
-	const ExprPtr expr;
+	const ExprPtr expr = static_cast<Expr*>(nullptr);
 	void log(int depth, const char *event, const char *result, Context &con) const
 	{
 		fprintf(stderr, "[%d] ", depth);
