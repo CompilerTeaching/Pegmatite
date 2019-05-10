@@ -299,7 +299,7 @@ public:
 		{
 			const parse_proc &p = get_parse_proc(*(m.matched_rule));
 			assert(p);
-			if (not p(m.source, d))
+			if (!p(m.source, d))
 				return false;
 		}
 
@@ -1526,7 +1526,7 @@ bool StreamInput::fillBuffer(Index start, Index &len, char32_t *&b)
 	len = std::min(len, this->length - start);
 
 	stream.seekg(static_cast<std::streamoff>(start));
-	if (not stream.good())
+	if (!stream.good())
 	{
 		return false;
 	}
