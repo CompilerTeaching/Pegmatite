@@ -60,6 +60,9 @@ std::string demangle(std::string mangled)
 		abi::__cxa_demangle(mangled.c_str(), buffer, &s, &err);
 #else
 		nullptr;
+	(void)err;
+	(void)s;
+	(void)buffer;
 #endif
 	std::string result = demangled ? demangled : mangled;
 
@@ -168,7 +171,7 @@ bool ASTString::construct(const pegmatite::InputRange &r, pegmatite::ASTStack &,
                           const ErrorReporter &)
 {
 	std::stringstream stream;
-	for_each(r.begin(), r.end(), [&](char c) {stream << c;});
+	for_each(r.begin(), r.end(), [&](char32_t c) {stream << c;});
 	this->std::string::operator=(stream.str());
 
 	return true;
