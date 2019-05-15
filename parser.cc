@@ -612,6 +612,17 @@ protected:
 //terminal
 class TerminalExpr : public UnaryExpr
 {
+	bool parse(Context &con) const
+	{
+		bool ret = expr->parse_term(con);
+		if (ret && !con.end())
+		{
+			ParsingState st(con);
+			ret &= con.parse_ws();
+			con.restore(st);
+		}
+		return ret;
+	}
 public:
 	//constructor.
 	TerminalExpr(const ExprPtr e) :
@@ -622,13 +633,13 @@ public:
 	//parse with whitespace
 	virtual bool parse_non_term(Context &con) const
 	{
-		return expr->parse_term(con);
+		return parse(con);
 	}
 
 	//parse terminal
 	virtual bool parse_term(Context &con) const
 	{
-		return expr->parse_term(con);
+		return parse(con);
 	}
 
 	virtual void dump() const
