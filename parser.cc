@@ -263,7 +263,7 @@ public:
 	void consume(size_t chars)
 	{
 		position.it += chars;
-		position.col += chars;
+		position.col += static_cast<int>(chars);
 	}
 
 	//next line
@@ -317,7 +317,7 @@ private:
 	/**
 	 * The mode for parsing a rule.
 	 */
-	enum MatchMode
+	enum class MatchMode
 	{
 		/**
 		 * Parse as normal.  If we're left recursing, then try again in reject
@@ -341,7 +341,7 @@ private:
 		MatchMode mode;
 
 		//constructor
-		RuleState(size_t ParserPosition = Input::npos, MatchMode m = PARSE) :
+		RuleState(size_t ParserPosition = Input::npos, MatchMode m = MatchMode::PARSE) :
 			position(ParserPosition), mode(m) {}
 	};
 	//parse non-term rule.
@@ -1183,6 +1183,11 @@ bool Context::parse_non_term(const Rule &r)
 	return parse_rule(r, &Context::_parse_non_term);
 }
 
+#ifdef _MSC_VER
+// Disable uninit variable check as MSVC is not detecting exhaustive enum usage.
+#  pragma warning(push)
+#  pragma warning(disable: 4701)
+#endif
 bool Context::parse_rule(const Rule &r, bool (Context::*parse_func)(const Rule &))
 {
 	// For each rule, we maintain a vector consisting of where it was last
@@ -1193,14 +1198,13 @@ bool Context::parse_rule(const Rule &r, bool (Context::*parse_func)(const Rule &
 	// can't be in left recursion if this is the first time that we've
 	// encountered the rule.
 	size_t last_pos = Input::npos;
-	MatchMode last_mode = PARSE;
+	MatchMode last_mode = MatchMode::PARSE;
 	if (!states.empty())
 	{
 		auto &last = states.back();
 		last_pos = last.position;
 		last_mode = last.mode;
 	}
-
 	// Return value (success or failure of parse)
 	bool ok;
 
@@ -1233,31 +1237,31 @@ bool Context::parse_rule(const Rule &r, bool (Context::*parse_func)(const Rule &
 	switch (last_mode)
 	{
 		//normal parse
-		case PARSE:
+		case MatchMode::PARSE:
 			if (lr)
 			{
 				//first try to parse the rule by rejecting it, so alternative
 				//branches are examined
-				states.push_back(RuleState(new_pos, REJECT));
+				states.push_back(RuleState(new_pos, MatchMode::REJECT));
 				ok = (this->*parse_func)(r);
 				states.pop_back();
 				break;
 			}
 			else
 			{
-				states.push_back(RuleState(new_pos, PARSE));
+				states.push_back(RuleState(new_pos, MatchMode::PARSE));
 				ok = (this->*parse_func)(r);
 				states.pop_back();
 			}
 			break;
-		case REJECT:
+		case MatchMode::REJECT:
 			if (lr)
 			{
 				ok = false;
 			}
 			else
 			{
-				states.push_back(RuleState(new_pos, PARSE));
+				states.push_back(RuleState(new_pos, MatchMode::PARSE));
 				ok = (this->*parse_func)(r);
 				states.pop_back();
 			}
@@ -1293,7 +1297,9 @@ bool Context::parse_rule(const Rule &r, bool (Context::*parse_func)(const Rule &
 
 	return ok;
 }
-
+#ifdef _MSC_VER
+#  pragma warning(pop)
+#endif
 
 
 //parse term rule.
@@ -1525,7 +1531,7 @@ bool StreamInput::fillBuffer(Index start, Index &len, char32_t *&b)
 		return false;
 	}
 
-	char buffer[static_buffer_size];
+	char l_buffer[static_buffer_size];
 	len = std::min(this->length, static_buffer_size);
 	len = std::min(len, this->length - start);
 
@@ -1535,7 +1541,7 @@ bool StreamInput::fillBuffer(Index start, Index &len, char32_t *&b)
 		return false;
 	}
 
-	stream.read(buffer, static_cast<std::streamsize>(len));
+	stream.read(l_buffer, static_cast<std::streamsize>(len));
 	if (static_cast<Index>(stream.gcount()) != len)
 	{
 		return false;
@@ -1543,7 +1549,7 @@ bool StreamInput::fillBuffer(Index start, Index &len, char32_t *&b)
 
 	for (Index i = 0 ; i < len; i++)
 	{
-		b[i] = static_cast<char32_t>(buffer[i]);
+		b[i] = static_cast<char32_t>(l_buffer[i]);
 	}
 
 	return true;
