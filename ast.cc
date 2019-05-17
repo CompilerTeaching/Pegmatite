@@ -171,7 +171,9 @@ bool ASTString::construct(const pegmatite::InputRange &r, pegmatite::ASTStack &,
                           const ErrorReporter &)
 {
 	std::stringstream stream;
-	for_each(r.begin(), r.end(), [&](char32_t c) {stream << c;});
+	for_each(r.begin(),
+	         r.end(),
+	         [&](char32_t c) {stream << static_cast<char>(c);});
 	this->std::string::operator=(stream.str());
 
 	return true;
