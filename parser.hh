@@ -67,7 +67,7 @@ class Input
 	/**
 	 * Iterator, refers back into the input stream.
 	 */
-	class iterator : public std::iterator<std::bidirectional_iterator_tag, char32_t>
+	class iterator
 	{
 		friend Input;
 		/**
@@ -83,6 +83,13 @@ class Input
 		 */
 		inline iterator(Input *b, Index i) : buffer(b), idx(i) {}
 		public:
+
+		typedef std::bidirectional_iterator_tag iterator_category;
+		typedef std::ptrdiff_t difference_type;
+		typedef const char32_t& reference;
+		typedef const char32_t* pointer;
+		typedef char32_t value_type;
+	
 		/**
 		 * Default constructor, constructs an invalid iterator into no buffer.
 		 */

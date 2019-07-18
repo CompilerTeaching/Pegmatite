@@ -495,10 +495,17 @@ private:
  * appropriately).
  */
 template<typename Src, typename Out, typename In>
-class IteratorAdaptor : public std::iterator<std::bidirectional_iterator_tag, Out>
+class IteratorAdaptor
 {
 		Src s;
 		public:
+
+		typedef std::bidirectional_iterator_tag iterator_category;
+		typedef std::ptrdiff_t difference_type;
+		typedef Out value_type;
+		typedef const Out& reference;
+		typedef const Out* pointer;
+
 		inline IteratorAdaptor(Src src) : s(src) {}
 		inline IteratorAdaptor() {}
 		inline Out operator*() const { return static_cast<Out>(*s); }
