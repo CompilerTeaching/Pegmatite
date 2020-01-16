@@ -21,7 +21,6 @@ endif()
 
 set(CMAKE_CXX_STANDARD 11)
 
-
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	set(CLANG_FLAGS "-Weverything -Wno-c++98-compat -Wno-padded")
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CLANG_FLAGS}")
@@ -33,11 +32,21 @@ else()
 	endif()
 endif()
 
+if (WIN32)
+  target_compile_definitions(pegmatite PUBLIC -DPEGMATITE_PLATFORM_WINDOWS)
+  target_compile_definitions(pegmatite-static PUBLIC -DPEGMATITE_PLATFORM_WINDOWS)
+elseif(UNIX)
+  target_compile_definitions(pegmatite PUBLIC -DPEGMATITE_PLATFORM_UNIX)
+  target_compile_definitions(pegmatite-static PUBLIC -DPEGMATITE_PLATFORM_UNIX)
+endif()
+
 option(USE_RTTI "Use native C++ RTTI" ON)
 option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
 if (USE_RTTI)
-	add_definitions(-DUSE_RTTI=1)
+  target_compile_definitions(pegmatite PUBLIC -DUSE_RTTI=1)
+  target_compile_definitions(pegmatite-static PUBLIC -DUSE_RTTI=1)
 endif()
+
 if(BUILD_DOCUMENTATION)
 	FIND_PACKAGE(Doxygen)
 	if (NOT DOXYGEN_FOUND)
@@ -55,10 +64,13 @@ endif()
 
 option(BUILD_TRACING "Build with debug parse tracing support" OFF)
 if (BUILD_TRACING)
-	add_definitions("-D DEBUG_PARSING")
+  target_compile_definitions(pegmatite PUBLIC -DDEBUG_PARSING)
+  target_compile_definitions(pegmatite-static PUBLIC -DDEBUG_PARSING)
 endif()
 
-include_directories(.)
+target_include_directories(pegmatite PUBLIC .)
+target_include_directories(pegmatite-static PUBLIC .)
+
 option(BUILD_EXAMPLES "Build examples" OFF)
 if(BUILD_EXAMPLES)
   add_subdirectory(examples)

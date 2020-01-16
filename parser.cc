@@ -37,7 +37,7 @@
 #include <unordered_set>
 #include <sys/stat.h>
 #include <sys/types.h>
-#ifdef __unix__
+#ifdef PEGMATITE_PLATFORM_UNIX
 #include <sys/uio.h>
 #include <unistd.h>
 #endif
@@ -1468,7 +1468,7 @@ Input::Index StringInput::size() const
 
 const std::size_t Input::static_buffer_size;
 
-#ifdef __unix__
+#ifdef PEGMATITE_PLATFORM_UNIX
 AsciiFileInput::AsciiFileInput(int file, const std::string& name)
 	: Input(name), fd(file)
 {
