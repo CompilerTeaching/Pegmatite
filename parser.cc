@@ -1466,6 +1466,8 @@ Input::Index StringInput::size() const
 	return str.size();
 }
 
+const std::size_t Input::static_buffer_size;
+
 #ifdef __unix__
 AsciiFileInput::AsciiFileInput(int file, const std::string& name)
 	: Input(name), fd(file)
@@ -1482,7 +1484,6 @@ AsciiFileInput::AsciiFileInput(int file, const std::string& name)
 	}
 }
 
-const std::size_t Input::static_buffer_size;
 bool AsciiFileInput::fillBuffer(Index start, Index &length, char32_t *&b)
 {
 	if (start > file_size)
