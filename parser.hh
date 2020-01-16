@@ -316,7 +316,7 @@ class UnicodeVectorInput : public Input
 	Index size() const override;
 };
 
-#ifdef __unix__
+#ifdef PEGMATITE_PLATFORM_UNIX
 /**
  * A concrete `Input` class that wraps a file.  The file is assumed to be in
  * ASCII.  Note that this does *NOT* include UTF-8 unless it is restricted to

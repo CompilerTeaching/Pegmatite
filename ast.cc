@@ -30,6 +30,9 @@
 #include <cstdlib>
 #include "ast.hh"
 
+#ifdef PEGMATITE_PLATFORM_UNIX
+#include <cxxabi.h>
+#endif
 
 namespace {
 /**
@@ -56,7 +59,7 @@ std::string demangle(std::string mangled)
 	char *buffer = static_cast<char*>(malloc(mangled.length() + 1));
 
 	char *demangled = 
-#ifdef __unix__
+#ifdef PEGMATITE_PLATFORM_UNIX
 		abi::__cxa_demangle(mangled.c_str(), buffer, &s, &err);
 #else
 		nullptr;
