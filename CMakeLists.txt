@@ -69,6 +69,12 @@ if (BUILD_TRACING)
   target_compile_definitions(pegmatite-static PUBLIC -DDEBUG_PARSING)
 endif()
 
+option(BUILD_AST_TRACING "Build with debug AST construction tracing support" OFF)
+if (BUILD_AST_TRACING)
+  target_compile_definitions(pegmatite PUBLIC -DDEBUG_AST_CONSTRUCTION)
+  target_compile_definitions(pegmatite-static PUBLIC -DDEBUG_AST_CONSTRUCTION)
+endif()
+
 target_include_directories(pegmatite PUBLIC .)
 target_include_directories(pegmatite-static PUBLIC .)
 
