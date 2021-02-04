@@ -274,7 +274,7 @@ template<typename T>
 T& constructValue(const pegmatite::InputRange &r, T& value)
 {
 	std::stringstream stream;
-	for_each(r.begin(), r.end(), [&](char c) {stream << c;});
+	std::for_each(r.begin(), r.end(), [&](char c) {stream << c;});
 	stream >> value;
 	return value;
 }
