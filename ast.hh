@@ -311,7 +311,7 @@ std::pair<bool, std::unique_ptr<T>> popFromASTStack(const InputRange &r,
 
 	//get the object
 	T *obj = node->get_as<T>();
-	if (obj == nullptr and not Optional)
+	if ((obj == nullptr) && !(Optional))
 	{
 		err(childRange,
 			"Expected " + demangle(typeid(T).name())
@@ -555,7 +555,7 @@ public:
 				ASTStack *st = reinterpret_cast<ASTStack *>(d);
 				T *obj = new T();
 				debug_log("Constructing", st->size(), obj);
-				if (not obj->construct(range, *st, err))
+				if (!(obj->construct(range, *st, err)))
 				{
 					debug_log("Failed", st->size(), obj);
 					return false;
