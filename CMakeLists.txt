@@ -3,6 +3,13 @@ cmake_policy(SET CMP0042 NEW)
 
 project(libpegmatite)
 
+if (WIN32)
+	# No support on Windows for a shared library.
+	set(BUILD_SHARED_LIB OFF)
+else()
+	option(BUILD_SHARED_LIB "Build shared library" ON)
+endif()
+
 set(libpegmatite 0.1)
 
 set(libpegmatite_CXX_SRCS
@@ -10,8 +17,35 @@ set(libpegmatite_CXX_SRCS
 	parser.cc
 )
 
-add_library(pegmatite SHARED ${libpegmatite_CXX_SRCS})
+option(USE_RTTI "Use native C++ RTTI" ON)
+option(BUILD_TRACING "Build with debug parse tracing support" OFF)
+option(BUILD_AST_TRACING "Build with debug AST construction tracing support" OFF)
+
+macro(set_options target)
+	if (WIN32)
+		target_compile_definitions(${target} PUBLIC -DPEGMATITE_PLATFORM_WINDOWS)
+	elseif(UNIX)
+		target_compile_definitions(${target} PUBLIC -DPEGMATITE_PLATFORM_UNIX)
+	endif()
+	if (USE_RTTI)
+		target_compile_definitions(${target} PUBLIC -DUSE_RTTI=1)
+	endif ()
+	if (BUILD_TRACING)
+		target_compile_definitions(${target} PUBLIC -DDEBUG_PARSING)
+	endif()
+	if (BUILD_AST_TRACING)
+		target_compile_definitions(${target} PUBLIC -DDEBUG_AST_CONSTRUCTION)
+	endif()
+	target_include_directories(${target} PUBLIC .)
+endmacro()
+
+if (BUILD_SHARED_LIB)
+	add_library(pegmatite SHARED ${libpegmatite_CXX_SRCS})
+	set_options(pegmatite)
+endif()
+
 add_library(pegmatite-static STATIC ${libpegmatite_CXX_SRCS})
+set_options(pegmatite-static)
 set_target_properties(pegmatite-static PROPERTIES
 	POSITION_INDEPENDENT_CODE true
 	OUTPUT_NAME "pegmatite")
@@ -33,21 +67,7 @@ else()
 	endif()
 endif()
 
-if (WIN32)
-  target_compile_definitions(pegmatite PUBLIC -DPEGMATITE_PLATFORM_WINDOWS)
-  target_compile_definitions(pegmatite-static PUBLIC -DPEGMATITE_PLATFORM_WINDOWS)
-elseif(UNIX)
-  target_compile_definitions(pegmatite PUBLIC -DPEGMATITE_PLATFORM_UNIX)
-  target_compile_definitions(pegmatite-static PUBLIC -DPEGMATITE_PLATFORM_UNIX)
-endif()
-
-option(USE_RTTI "Use native C++ RTTI" ON)
 option(BUILD_DOCUMENTATION "Use Doxygen to create the HTML based API documentation" OFF)
-if (USE_RTTI)
-  target_compile_definitions(pegmatite PUBLIC -DUSE_RTTI=1)
-  target_compile_definitions(pegmatite-static PUBLIC -DUSE_RTTI=1)
-endif()
-
 if(BUILD_DOCUMENTATION)
 	FIND_PACKAGE(Doxygen)
 	if (NOT DOXYGEN_FOUND)
@@ -62,21 +82,6 @@ if(BUILD_DOCUMENTATION)
 	                   COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
 	                   SOURCES ${PROJECT_BINARY_DIR}/Doxyfile)
 endif()
-
-option(BUILD_TRACING "Build with debug parse tracing support" OFF)
-if (BUILD_TRACING)
-  target_compile_definitions(pegmatite PUBLIC -DDEBUG_PARSING)
-  target_compile_definitions(pegmatite-static PUBLIC -DDEBUG_PARSING)
-endif()
-
-option(BUILD_AST_TRACING "Build with debug AST construction tracing support" OFF)
-if (BUILD_AST_TRACING)
-  target_compile_definitions(pegmatite PUBLIC -DDEBUG_AST_CONSTRUCTION)
-  target_compile_definitions(pegmatite-static PUBLIC -DDEBUG_AST_CONSTRUCTION)
-endif()
-
-target_include_directories(pegmatite PUBLIC .)
-target_include_directories(pegmatite-static PUBLIC .)
 
 option(BUILD_EXAMPLES "Build examples" OFF)
 if(BUILD_EXAMPLES)
